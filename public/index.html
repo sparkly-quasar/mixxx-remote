@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- [AI-generated: written autonomously by Claude Code, an AI agent. Review before use.] -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0e1014">
+  <title>Mixxx Remote</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div id="status" class="status off"><span class="dot"></span><span class="label">Connecting</span></div>
+    <nav>
+      <button class="tab active" data-tab="mix">Mix</button>
+      <button class="tab" data-tab="library">Library</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="mix" class="panel">
+      <div class="decks"></div>
+      <div class="xfader-wrap">
+        <span class="xf-label">1</span>
+        <div class="fader h" id="xfader" data-g="[Master]" data-k="crossfader" data-def="0.5" data-bipolar="1">
+          <div class="track"><div class="fill"></div><div class="thumb"></div></div>
+        </div>
+        <span class="xf-label">2</span>
+      </div>
+    </section>
+
+    <section id="library" class="panel" hidden>
+      <div class="lib-controls">
+        <div class="row">
+          <select id="source" aria-label="Playlist or crate"></select>
+          <button id="refresh" class="small" aria-label="Refresh lists">Refresh</button>
+        </div>
+        <div class="row">
+          <input id="filter" type="search" placeholder="Filter title or artist" autocomplete="off">
+          <select id="sort" aria-label="Sort">
+            <option value="pos"># order</option>
+            <option value="bpm">BPM</option>
+            <option value="key">Key</option>
+            <option value="title">Title</option>
+          </select>
+        </div>
+        <div class="row match-row">
+          <label class="check"><input id="only-matches" type="checkbox"> Only tracks that fit</label>
+          <span id="ref" class="ref">Nothing playing</span>
+        </div>
+        <div id="lib-hint" class="hint"></div>
+      </div>
+      <ul id="tracks"></ul>
+      <div class="browse">
+        <span class="browse-label">Mixxx highlight</span>
+        <button data-browse="-1" aria-label="Move highlight up">&#9650;</button>
+        <button data-browse="1" aria-label="Move highlight down">&#9660;</button>
+        <button data-loadhl="1" class="d1">Load 1</button>
+        <button data-loadhl="2" class="d2">Load 2</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <template id="deck-tpl">
+    <div class="deck">
+      <div class="deck-head">
+        <span class="deck-num"></span>
+        <div class="track-info">
+          <div class="title">No track</div>
+          <div class="artist"></div>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="bpm">--.-</span>
+        <span class="keybadge">--</span>
+        <span class="time">-:--</span>
+      </div>
+      <div class="progress"><div class="bar"></div></div>
+      <div class="controls">
+        <div class="buttons">
+          <div class="row two">
+            <button class="cue big" data-hold="cue_default">CUE</button>
+            <button class="play big" data-toggle="play">PLAY</button>
+          </div>
+          <div class="row two">
+            <button data-toggle="sync_enabled">SYNC</button>
+            <button data-toggle="pfl" aria-label="Headphone cue (PFL)"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15v-3a8 8 0 0 1 16 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="3" y="14" width="5" height="7" rx="1.5" fill="currentColor"/><rect x="16" y="14" width="5" height="7" rx="1.5" fill="currentColor"/></svg></button>
+          </div>
+          <div class="row four loops">
+            <button data-loop="4">4</button>
+            <button data-loop="8">8</button>
+            <button data-loop="16">16</button>
+            <button data-loop="32">32</button>
+          </div>
+          <div class="row four hotcues">
+            <button data-hotcue="1">1</button>
+            <button data-hotcue="2">2</button>
+            <button data-hotcue="3">3</button>
+            <button data-hotcue="4">4</button>
+          </div>
+          <div class="tempo">
+            <div class="fader h small" data-k="rate" data-def="0.5" data-bipolar="1">
+              <div class="track"><div class="fill"></div><div class="thumb"></div></div>
+            </div>
+            <button class="tiny" data-toggle="keylock">KEY</button>
+          </div>
+        </div>
+        <div class="strip">
+          <div class="fcol"><div class="fader v" data-eq="3" data-def="0.5" data-bipolar="1"><div class="track"><div class="fill"></div><div class="thumb"></div></div></div><span>HI</span></div>
+          <div class="fcol"><div class="fader v" data-eq="2" data-def="0.5" data-bipolar="1"><div class="track"><div class="fill"></div><div class="thumb"></div></div></div><span>MID</span></div>
+          <div class="fcol"><div class="fader v" data-eq="1" data-def="0.5" data-bipolar="1"><div class="track"><div class="fill"></div><div class="thumb"></div></div></div><span>LOW</span></div>
+          <div class="fcol"><div class="fader v fx" data-fx="1" data-def="0.5" data-bipolar="1"><div class="track"><div class="fill"></div><div class="thumb"></div></div></div><span>FILT</span></div>
+          <div class="fcol vol"><div class="fader v" data-k="volume" data-def="1"><div class="track"><div class="fill"></div><div class="thumb"></div></div></div><div class="vu"><div class="vu-fill"></div></div><span>VOL</span></div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
+<!-- [AI-generated: end of autonomously written file] -->

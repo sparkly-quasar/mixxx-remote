@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [AI-generated: written autonomously by Claude Code, an AI agent. Review before use.] -->
+<MixxxControllerPreset mixxxVersion="2.4.0+" schemaVersion="1">
+  <info>
+    <name>Phone Remote (Wi-Fi bridge)</name>
+    <author>phone-remote bridge</author>
+    <description>Talks to the phone-remote Node bridge over a virtual MIDI port using SysEx. Select this mapping for the "Mixxx Phone Remote" device.</description>
+  </info>
+  <controller id="PhoneRemote">
+    <scriptfiles>
+      <file filename="Phone-Remote.js" functionprefix="PhoneRemote"/>
+    </scriptfiles>
+    <controls>
+      <control>
+        <group>[Master]</group>
+        <key>PhoneRemote.incomingData</key>
+        <description>All bridge messages arrive as SysEx and are parsed in the script.</description>
+        <status>0xF0</status>
+        <options>
+          <Script-Binding/>
+        </options>
+      </control>
+    </controls>
+    <outputs/>
+  </controller>
+</MixxxControllerPreset>
+<!-- [AI-generated: end of autonomously written file] -->
